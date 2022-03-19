@@ -1,10 +1,7 @@
-// 1. Initialize leaflet and center the city of Los Angeles
-
 const coordenates = [34.052235, -118.243683]
 
 var map = L.map("mapid").setView(coordenates, 10);
 
-// 2. Add Layer from mapbox
 const MAPBOX_TOKEN = 'pk.eyJ1IjoiYnJ1aml0YXJpIiwiYSI6ImNsMHR4czhqcTBiZmMzY3BlNHAxdzFrcm8ifQ.XMf2IiL6GLcwq1MrK7iyLA';
 
 L.tileLayer(
@@ -18,37 +15,30 @@ L.tileLayer(
     zoomOffset: -1,
     accessToken: MAPBOX_TOKEN,
   }
-
 ).addTo(map);
 
 
-let numberOfMetros = 1
-
-
-
+let numberOfMetros = 10
+let markers = L.markerClusterGroup()
 
 
 function getMetroUbis() {
   fetch('https://api.metro.net/vehicle_positions/bus?output_format=json')
     .then(response => response.json())
     .then(data => {
-      console.log('pasa')
-      data.entity.filter((e, i) => i < numberOfMetros).map(metro => {
+      data.entity.filter((e, i) => i <= numberOfMetros).map(metro => {
+        
         metrolat = metro.vehicle.position.latitude
         metrolong = metro.vehicle.position.longitude
 
-        L.marker([metrolat, metrolong]).bindPopup('soy un metro :D').addTo(map)
-        console.log(map)
+        markers.addLayer(L.marker(new L.LatLng(metrolat, metrolong)))
 
-        map.removeLayer(L)
+       setTimeout(() => {
+          markers.clearLayers()
+        }, 4500);  
       })
-
-
+      map.addLayer(markers)
     });
-
   setTimeout(getMetroUbis, 5000);
 }
-
-
 getMetroUbis()
-// 5. Create a code to refresh each 5 seconds and retrieve the new positions of the public transports
