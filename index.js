@@ -17,12 +17,11 @@ L.tileLayer(
   }
 ).addTo(map);
 
-
 let numberOfMetros = 10
 let markers = L.markerClusterGroup()
 
-
 function getMetroUbis() {
+  markers.clearLayers()
   fetch('https://api.metro.net/vehicle_positions/bus?output_format=json')
     .then(response => response.json())
     .then(data => {
@@ -32,10 +31,6 @@ function getMetroUbis() {
         metrolong = metro.vehicle.position.longitude
 
         markers.addLayer(L.marker(new L.LatLng(metrolat, metrolong)))
-
-       setTimeout(() => {
-          markers.clearLayers()
-        }, 4500);  
       })
       map.addLayer(markers)
     });
