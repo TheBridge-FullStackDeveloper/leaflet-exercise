@@ -30,10 +30,11 @@ function getMetroUbis() {
         metrolat = metro.vehicle.position.latitude
         metrolong = metro.vehicle.position.longitude
 
-        markers.addLayer(L.marker(new L.LatLng(metrolat, metrolong)))
+        markers.addLayer(L.marker(new L.LatLng(metrolat, metrolong)).bindPopup(metro.id))
       })
       map.addLayer(markers)
     });
-  setTimeout(getMetroUbis, 5000);
+  ;
 }
+setInterval(getMetroUbis, 5000)
 getMetroUbis()
